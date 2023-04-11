@@ -5,11 +5,15 @@ class ProductManager {
     this.path = './files/Products.json';
   }
 
-  async getProducts() {
+  async getProducts(limit) {
     if (fs.existsSync(this.path)) {
       const data = await fs.promises.readFile(this.path, 'utf-8');
       const products = JSON.parse(data);
-      return products;
+      if (limit) {
+        return products.slice(0, limit);
+      } else {
+        return products;
+      }
     } else {
       return [];
     }
@@ -50,9 +54,9 @@ class ProductManager {
     return product;
   }
 
-  async getProductById(productId) {
+  async getProductById(pId) {
     const products = await this.getProducts();
-    const product = products.find(product => product.id === productId);
+    const product = products.find(product => product.id === pId);
     if (!product) {
       throw new Error("Producto no encontrado. Por favor, ingrese una id válida.");
     }
